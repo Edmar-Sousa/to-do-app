@@ -2,13 +2,8 @@
     <div class="container-information flex">
         <button class="close-button" v-on:click="$emit('show-menu')">X</button>
 
-        <div class="time-container flex">
-            <img src="../assets/time.png" />
-            <h1>21°C</h1>
-        </div>
-
         <div class="task-of-day-container">
-            <h2>Tarefas do dia:</h2>
+            <h2>Tarefas do dia: {{ date }}</h2>
             <ul>
                 <li><span class="hour">10:00</span> Go to shop</li>
                 <li><span class="hour">10:00</span> Go to shop</li>
@@ -29,7 +24,14 @@
 
 <script setup lang="ts">
 
-const emit = defineEmits(['show-menu'])
+import { computed } from 'vue'
+
+const emit  = defineEmits(['show-menu'])
+const props = defineProps(['dayTask'])
+
+const date = computed(() => {
+    return `${props.dayTask.day} de ${props.dayTask.month} de ${props.dayTask.year}`
+})
 
 </script>
 
@@ -86,10 +88,6 @@ button.close-button {
 img {
     width: 130px;
     margin: 20px 0;
-}
-
-h1 {
-    font-size: 5rem;
 }
 
 h2 {

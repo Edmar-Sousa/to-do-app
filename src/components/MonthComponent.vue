@@ -35,7 +35,7 @@
                         v-for="day in week" 
                         v-bind:key="day"
                         v-bind:class="{ 'week-day-gray' : day.applyGrayColor }"
-                        v-on:click="$emit('day-add-task', day.dayNumber)">
+                        v-on:click="$emit('day-add-task', { day: day.dayNumber, month: state.currentMonth, year: state.currentYear })">
                             {{ day.dayNumber }}
                     </td>
                 </tr>

@@ -1,6 +1,9 @@
 <template>
     <div class="app">
-        <DayInformations v-if="state.showOrHiddenTaskList || isMobile" v-on:show-menu="hiddenMenu"/>
+        <DayInformations 
+            v-if="state.showOrHiddenTaskList || isMobile" 
+            v-on:show-menu="hiddenMenu"
+            v-bind:dayTask="state.date" />
         <MonthComponent v-on:day-add-task="showMenuTask"/>
     </div>
 </template>
@@ -12,10 +15,15 @@ import { reactive, onMounted, computed } from 'vue'
 import DayInformations from './components/DayInformations.vue'
 import MonthComponent  from './components/MonthComponent.vue'
 
-
 const state = reactive({
     showOrHiddenTaskList: true,
-    windowWidth: 0
+    windowWidth: 0,
+
+    date: {
+        day: 0,
+        month: 0,
+        year: 0,
+    }
 })
 
 onMounted(() => {
@@ -26,11 +34,13 @@ onMounted(() => {
 
 const isMobile = computed(() => state.windowWidth < 768 ? false : true)
 
-function showMenuTask(dayNumber) {
-    console.log(dayNumber)
-
+function showMenuTask(taskDate) {
     if (isMobile)
         state.showOrHiddenTaskList = true
+
+    state.date.day   = taskDate.day
+    state.date.month = taskDate.month
+    state.date.year  = taskDate.year
 }
 
 function hiddenMenu() {
@@ -38,6 +48,7 @@ function hiddenMenu() {
 }
 
 </script>
+
 
 <style>
 
