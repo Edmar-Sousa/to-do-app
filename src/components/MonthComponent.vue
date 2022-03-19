@@ -34,7 +34,8 @@
                     <td 
                         v-for="day in week" 
                         v-bind:key="day"
-                        v-bind:class="{ 'week-day-gray' : day.applyGrayColor }">
+                        v-bind:class="{ 'week-day-gray' : day.applyGrayColor }"
+                        v-on:click="$emit('day-add-task', day.dayNumber)">
                             {{ day.dayNumber }}
                     </td>
                 </tr>
@@ -78,6 +79,7 @@ const state = reactive({
     week: Array<Array<DayDataType>>()
 })
 
+const emit = defineEmits(['day-add-task'])
 
 onMounted(() => {
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
@@ -103,6 +105,7 @@ function changeMonth(changeValue: number) {
 
 </script>
 
+
 <style scoped>
 
 div.month-container {
@@ -125,14 +128,14 @@ div.calender-header {
 
 h1.title-month {
     font-weight: 700;
-    font-size: 30px;
+    font-size: 3rem;
     margin: 0 15px;
 
     color: var(--primary-color);
 }
 
 button.change-date-button {
-    font-size: 30px;
+    font-size: 3rem;
     font-weight: 700;
     color: var(--primary-color);
 
@@ -153,10 +156,11 @@ button.change-date-button:hover {
 table.weeks-table {
     width: 100%;
     margin: 30px 0;
+    font-size: 1.6rem;
 }
 
 table.weeks-table td {
-    height: 40px;
+    height: 4rem;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
