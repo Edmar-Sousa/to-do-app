@@ -20,9 +20,9 @@ const state = reactive({
     windowWidth: 0,
 
     date: {
-        day: 0,
+        day:   0,
         month: 0,
-        year: 0,
+        year:  0,
     }
 })
 

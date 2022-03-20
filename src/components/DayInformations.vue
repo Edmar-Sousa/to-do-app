@@ -4,6 +4,14 @@
 
         <div class="task-of-day-container">
             <h2>Tarefas do dia: {{ date }}</h2>
+
+            <div class="add-task-container">
+                <InputComponent nameInput="hora" />
+                <InputComponent nameInput="Tarefa" />
+
+                <button class="add-task-btn">+</button>
+            </div>
+
             <ul>
                 <li><span class="hour">10:00</span> Go to shop</li>
                 <li><span class="hour">10:00</span> Go to shop</li>
@@ -25,6 +33,9 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
+
+import InputComponent from './InputComponent.vue'
+
 
 const emit  = defineEmits(['show-menu'])
 const props = defineProps(['dayTask'])
@@ -58,6 +69,36 @@ div.task-of-day-container {
     padding: 20px;
     overflow: hidden;
     justify-content: left;
+}
+
+div.add-task-container {
+    display: flex;
+}
+
+div.add-task-container div:first-child {
+    width: 70px;
+}
+
+div.add-task-container div:nth-child(2) {
+    flex: 1;
+}
+
+button.add-task-btn {
+    width: 30px;
+    height: 30px;
+
+    font-weight: bold;
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    border-radius: 15px;
+    border: none;
+    background: none;
+}
+
+button.add-task-btn:hover {
+    background: var(--white-color);
 }
 
 span.hour {
@@ -103,6 +144,7 @@ li {
 
 ul {
     height: 80%;
+    margin-top: 10px;
     list-style: none;
     overflow-y: auto;
 }
