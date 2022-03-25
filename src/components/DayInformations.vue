@@ -6,8 +6,8 @@
             <h2>Tarefas do dia: {{ date }}</h2>
 
             <div class="add-task-container">
-                <InputComponent nameInput="hora" />
-                <InputComponent nameInput="Tarefa" />
+                <InputComponent nameInput="hora"   v-model="hourInputValue" />
+                <InputComponent nameInput="Tarefa" v-model="taskInputValue" />
 
                 <button class="add-task-btn">+</button>
             </div>
@@ -32,10 +32,10 @@
 
 <script setup lang="ts">
 
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import InputComponent from './InputComponent.vue'
-
+import { useDatabase } from '../utils/localStore'
 
 const emit  = defineEmits(['show-menu'])
 const props = defineProps(['dayTask'])
@@ -43,6 +43,9 @@ const props = defineProps(['dayTask'])
 const date = computed(() => {
     return `${props.dayTask.day} de ${props.dayTask.month} de ${props.dayTask.year}`
 })
+
+const hourInputValue = ref('')
+const taskInputValue = ref('')
 
 </script>
 

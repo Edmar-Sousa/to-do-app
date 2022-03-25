@@ -147,6 +147,17 @@ export function getWeeksOfMonth(year : number, month: number) {
     return week
 }
 
+export function getToday() {
+    const stringToday = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full' }).format(new Date())
+    // sexta-feira, 25 de março de 2022
+    const splitDate = stringToday.split(' ')
+
+    const day   = splitDate[1]               // 1 -> index of day
+    const month = splitDate[3].toUpperCase() // 3 -> index of month
+    const year  = splitDate[5]               // 5 -> index of year
+
+    return { day, month, year }
+}
 
 export function getCurrentCalender(year : number, month: number) {
     const currentYear  = year

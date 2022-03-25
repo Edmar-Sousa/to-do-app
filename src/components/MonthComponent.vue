@@ -34,9 +34,12 @@
                     <td 
                         v-for="day in week" 
                         v-bind:key="day"
-                        v-bind:class="{ 'week-day-gray' : day.applyGrayColor }"
+                        v-bind:class="{ 
+                            'week-day-gray' : day.applyGrayColor, 
+                            'today' : today(day.dayNumber, state.currentMonth, state.currentYear) 
+                        }"
                         v-on:click="$emit('day-add-task', { day: day.dayNumber, month: state.currentMonth, year: state.currentYear })">
-                            {{ day.dayNumber }}
+                            <span>{{ day.dayNumber }}</span>
                     </td>
                 </tr>
             </tbody>
@@ -53,13 +56,15 @@ import {
     getNameMonth,
     getCurrentYear,
     getCurrentCalender,
-    getIndexNextMonth
+    getIndexNextMonth,
+    getToday
 } from '../utils/dateUtils'
 
 
 let currentMonthNumber = getCurrentMonthNumber()
 let currentYearNumber  = getCurrentYear()
 
+const todayDate = getToday()
 
 interface DayDataType {
     dayNumber: number
@@ -101,6 +106,11 @@ function changeMonth(changeValue: number) {
 
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
     setStateData(calenderData)
+}
+
+
+function today(day, month, year) {
+    return todayDate.day == day && todayDate.month == month && todayDate.year == year
 }
 
 </script>
@@ -184,6 +194,12 @@ span.mark {
     padding: 6px 7px;
     border-radius: 50%;
     background: var(--green-color);
+}
+
+td.today span {
+    padding: 7px;
+    border-radius: 50%;
+    border: 1px solid var(--green-color);
 }
 
 </style>
