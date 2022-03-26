@@ -79,7 +79,7 @@ function getDayIfExists(monthObject: Object, day: string) {
     return dayToReturn
 }
 
-function addTaskIntoLocalStorage(task: string, hour: string, day: string, month: string, year: string) {
+export function addTaskIntoLocalStorage(task: string, hour: string, day: string, month: string, year: string) {
     const yearObject = getKeyYear(year)
 
     if (yearObject) {
@@ -108,4 +108,15 @@ function addTaskIntoLocalStorage(task: string, hour: string, day: string, month:
 
         addTask(task, hour, data, year)
     }
+}
+
+
+export function getTaskOfYearMonthAndDay(year: string, month: string, day: string) {
+    const yearObject = getKeyYear(year)
+
+    if (yearObject) {
+        return yearObject[month][day]
+    }
+
+    return []
 }

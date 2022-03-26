@@ -34,7 +34,11 @@ onMounted(() => {
         state.windowWidth = window.innerWidth
     })
 
+    const todayData = getToday()
 
+    state.date.day   = todayData.day
+    state.date.month = todayData.month
+    state.date.year  = todayData.year
 })
 
 const isMobile = computed(() => state.windowWidth < 768 ? false : true)

@@ -9,45 +9,86 @@
                 <InputComponent nameInput="hora"   v-model="hourInputValue" />
                 <InputComponent nameInput="Tarefa" v-model="taskInputValue" />
 
-                <button class="add-task-btn">+</button>
+                <button class="add-task-btn" v-on:click="addTaskInDatabase">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
 
-            <ul>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
-                <li><span class="hour">10:00</span> Go to shop</li>
+            <ul v-if="listOfTask">
+                <li v-for="(task, i) in listOfTask" v-bind:key="i">
+                    <div>
+                        <span class="hour">{{ task.hour }}</span> {{ task.task }}
+                    </div>
+
+                    <div class="tasks-options">
+                        <i class="fas fa-trash"></i>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </li>
             </ul>
+
+            <p v-else class="not-task-message">
+                <i class="fas fa-exclamation-circle"></i>
+                Não tem tarefas para hoje, aproveite seu tempo livre!
+            </p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 import InputComponent from './InputComponent.vue'
-import { useDatabase } from '../utils/localStore'
+import { showNotificationOrAlert } from '../utils/Notification'
+import { addTaskIntoLocalStorage, getTaskOfYearMonthAndDay } from '../utils/localStore'
 
 const emit  = defineEmits(['show-menu'])
 const props = defineProps(['dayTask'])
 
-const date = computed(() => {
+const date = computed(() => { 
+    getTasks()
     return `${props.dayTask.day} de ${props.dayTask.month} de ${props.dayTask.year}`
 })
 
 const hourInputValue = ref('')
 const taskInputValue = ref('')
+const listOfTask = ref([])
+
+
+function getTasks() {
+    const year  = props.dayTask.year
+    const month = props.dayTask.month
+    const day   = props.dayTask.day
+
+    listOfTask.value = getTaskOfYearMonthAndDay(year, month, day)
+}
+
+
+function addTaskInDatabase() {
+    if (hourInputValue.value == '' || taskInputValue.value == '') {
+        showNotificationOrAlert('Preencha todos os campos!')
+        return
+    }
+
+    const hourIsValid = /^([0-1][0-9]|2[0-5]):[0-5][0-9]$/.test(hourInputValue.value)
+    if (!hourIsValid) {
+        showNotificationOrAlert('O horario da tarefa não corresponde ao formato de 24h')
+        return
+    }
+    
+    const task = taskInputValue.value
+    const hour = hourInputValue.value
+    const day  = props.dayTask.day
+    const month= props.dayTask.month
+    const year = props.dayTask.year
+
+    addTaskIntoLocalStorage(task, hour, day, month, year)
+    getTasks()
+}
 
 </script>
+
 
 <style scoped>
 
@@ -84,6 +125,20 @@ div.add-task-container div:first-child {
 
 div.add-task-container div:nth-child(2) {
     flex: 1;
+}
+
+p.not-task-message {
+    margin-top: 20px;
+    font-size: 1.6rem;
+}
+
+p.not-task-message i {
+    font-size: 1.8rem;
+}
+
+div.tasks-options i {
+    font-size: 2rem;
+    margin-right: 15px;
 }
 
 button.add-task-btn {
@@ -140,9 +195,33 @@ h2 {
 }
 
 li {
-    margin: 30px 0;
+    margin: 20px 0;
     font-size: 1.5rem;
     cursor: pointer;
+
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+li div.tasks-options {
+    display: none;
+}
+
+i.fa-trash:hover {
+    transition: 400ms;
+    color: rgb(184, 8, 8);
+}
+
+i.fa-check-circle:hover {
+    transition: 400ms;
+    color: rgb(13, 100, 4);
+}
+
+li:hover div.tasks-options {
+    display: block;
 }
 
 ul {
