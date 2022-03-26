@@ -35,10 +35,11 @@ interface DataType {
     oldMonth: {}
 }
 
-function addTask(task: string, hour: string, data: DataType, year: string) {
+
+function addTask(task: TaskType, data: DataType, year: string) {
     let { day, month, dayData, monthData, oldMonth } = data
 
-    dayData.push(newTaskObject(hour, task))
+    dayData.push(task)
     monthData[day] = dayData
     const monthObject = createObject(month, monthData)
 
@@ -81,6 +82,7 @@ function getDayIfExists(monthObject: Object, day: string) {
 
 export function addTaskIntoLocalStorage(task: string, hour: string, day: string, month: string, year: string) {
     const yearObject = getKeyYear(year)
+    const taskToAdd  = newTaskObject(hour, task)
 
     if (yearObject) {
         const monthObject = getMonthIfExists(yearObject, month)
@@ -94,7 +96,7 @@ export function addTaskIntoLocalStorage(task: string, hour: string, day: string,
             oldMonth: yearObject
         }
 
-        addTask(task, hour, data, year)
+        addTask(taskToAdd, data, year)
     }
 
     else {
@@ -106,7 +108,7 @@ export function addTaskIntoLocalStorage(task: string, hour: string, day: string,
             oldMonth: {}
         }
 
-        addTask(task, hour, data, year)
+        addTask(taskToAdd, data, year)
     }
 }
 
@@ -114,9 +116,34 @@ export function addTaskIntoLocalStorage(task: string, hour: string, day: string,
 export function getTaskOfYearMonthAndDay(year: string, month: string, day: string) {
     const yearObject = getKeyYear(year)
 
-    if (yearObject) {
+    if (yearObject == undefined) 
+        return []
+    
+    else if (month in yearObject && day in yearObject[month])
         return yearObject[month][day]
-    }
 
     return []
+}
+
+
+export function markTaskCheckOfYearMonthAndDay(year: string, month: string, day: string, index: number, check: boolean) {
+    const yearObject = getKeyYear(year)
+
+    if (yearObject) {
+        const monthObjects = yearObject[month]
+        let arrayOfTasks = monthObjects[day]
+
+        arrayOfTasks[index] = {
+            ...arrayOfTasks[index],
+            check
+        }
+        
+        monthObjects[day] = arrayOfTasks
+        yearObject[month] = monthObjects
+
+        window.localStorage.setItem(year, JSON.stringify(yearObject))
+        return arrayOfTasks
+    }
+
+    return null
 }

@@ -14,15 +14,16 @@
                 </button>
             </div>
 
-            <ul v-if="listOfTask">
+            <ul v-if="listOfTask.length > 0">
                 <li v-for="(task, i) in listOfTask" v-bind:key="i">
                     <div>
-                        <span class="hour">{{ task.hour }}</span> {{ task.task }}
+                        <span class="hour">{{ task.hour }}</span>
+                        <span v-bind:class="{ 'checked': task.check }">{{ task.task }}</span>
                     </div>
 
                     <div class="tasks-options">
                         <i class="fas fa-trash"></i>
-                        <i class="fas fa-check-circle"></i>
+                        <i class="fas fa-check-circle" v-on:click="markTaskWithCheck(i, task.check)"></i>
                     </div>
                 </li>
             </ul>
@@ -41,7 +42,11 @@ import { computed, ref, onMounted } from 'vue'
 
 import InputComponent from './InputComponent.vue'
 import { showNotificationOrAlert } from '../utils/Notification'
-import { addTaskIntoLocalStorage, getTaskOfYearMonthAndDay } from '../utils/localStore'
+import { 
+    addTaskIntoLocalStorage, 
+    getTaskOfYearMonthAndDay,
+    markTaskCheckOfYearMonthAndDay,
+} from '../utils/localStore'
 
 const emit  = defineEmits(['show-menu'])
 const props = defineProps(['dayTask'])
@@ -85,6 +90,21 @@ function addTaskInDatabase() {
 
     addTaskIntoLocalStorage(task, hour, day, month, year)
     getTasks()
+}
+
+
+function markTaskWithCheck(index, checkUpdate) {
+    const day   = props.dayTask.day
+    const month = props.dayTask.month
+    const year  = props.dayTask.year
+    const check = !checkUpdate
+
+    const result = markTaskCheckOfYearMonthAndDay(year, month, day, index, check)
+
+    if (result == null)
+        showNotificationOrAlert(`Erro ao atualizar a tarefa do dia: ${day} de ${month} de ${year}`)
+
+    listOfTask.value = result
 }
 
 </script>
@@ -163,6 +183,7 @@ span.hour {
     color: var(--primary-color);
     background: var(--white-color);
     padding: 3px 5px;
+    margin-right: 10px;
     border-radius: 50px;
 }
 
@@ -204,6 +225,10 @@ li {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+span.checked {
+    text-decoration: line-through;
 }
 
 li div.tasks-options {
