@@ -149,19 +149,42 @@ export function markTaskCheckOfYearMonthAndDay(year: string, month: string, day:
 }
 
 
+function deleteFieldsYearObjectIfEmpty(yearObject: any, arrayOfTasks: any, monthObject: any, month: string, day: string) {
+    if (arrayOfTasks.length != 0) {
+        monthObject[day]  = arrayOfTasks
+        yearObject[month] = monthObject
+
+        return yearObject
+    }
+
+    delete monthObject[day]
+
+    if (Object.keys(monthObject).length == 0)
+        delete yearObject[month]
+
+    return yearObject
+}
+
+function updateOrDeleteYearFromDatabase(yearObject: any, yearKey: string) {
+    if (Object.keys(yearObject).length > 0)
+        window.localStorage.setItem(yearKey, JSON.stringify(yearObject))
+
+    else
+        window.localStorage.removeItem(yearKey)
+}
+
 export function deleteTaskOfYearMonthAndDay(year: string, month: string, day: string, index: number) {
-    const yearObject = getKeyYear(year)
+    let yearObject = getKeyYear(year)
 
     if (yearObject) {
         const monthObject = yearObject[month]
         let arrayOfTasks  = monthObject[day]
 
         arrayOfTasks.splice(index, 1)
-        monthObject[day]  = arrayOfTasks
-        yearObject[month] = monthObject
+        yearObject = deleteFieldsYearObjectIfEmpty(yearObject, arrayOfTasks, monthObject, month, day)
+        updateOrDeleteYearFromDatabase(yearObject, year)
 
-        window.localStorage.setItem(year, JSON.stringify(yearObject))
-        return arrayOfTasks
+        return yearObject[month][day] ? yearObject[month][day] : []
     }
 
     return null

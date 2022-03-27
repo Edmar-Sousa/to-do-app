@@ -36,7 +36,7 @@
                         v-bind:key="day"
                         v-bind:class="{ 
                             'week-day-gray' : day.applyGrayColor, 
-                            'today' : today(day.dayNumber, state.currentMonth, state.currentYear) 
+                            'today' : today(day, state.currentMonth, state.currentYear) 
                         }"
                         v-on:click="$emit('day-add-task', { day: day.dayNumber, month: state.currentMonth, year: state.currentYear })">
                             <span>{{ fillNumberCalender(day.dayNumber) }}</span>
@@ -110,7 +110,10 @@ function changeMonth(changeValue: number) {
 
 
 function today(day, month, year) {
-    return todayDate.day == day && todayDate.month == month && todayDate.year == year
+    if (!day.applyGrayColor)
+        return todayDate.day == day.dayNumber && todayDate.month == month && todayDate.year == year
+
+    return false
 }
 
 function fillNumberCalender(number) {

@@ -85,9 +85,9 @@ function addTaskInDatabase() {
     
     const task = taskInputValue.value
     const hour = hourInputValue.value
-    const day  = props.dayTask.day
+    const day  = String(props.dayTask.day)
     const month= props.dayTask.month
-    const year = props.dayTask.year
+    const year = String(props.dayTask.year)
 
     addTaskIntoLocalStorage(task, hour, day, month, year)
     getTasks()
@@ -118,7 +118,8 @@ function deleteTask(indexTask) {
     if (result == null)
         showNotificationOrAlert(`Erro ao deletar a tarefa do dia: ${day} de ${month} de ${year}`)
 
-    listOfTask.value = result
+    else
+        listOfTask.value = result
 }
 
 </script>
