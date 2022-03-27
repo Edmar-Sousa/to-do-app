@@ -49,7 +49,7 @@ import {
     deleteTaskOfYearMonthAndDay,
 } from '../utils/localStore'
 
-const emit  = defineEmits(['show-menu'])
+const emit  = defineEmits(['show-menu', 'update-month'])
 const props = defineProps(['dayTask'])
 
 const date = computed(() => { 
@@ -91,6 +91,8 @@ function addTaskInDatabase() {
 
     addTaskIntoLocalStorage(task, hour, day, month, year)
     getTasks()
+
+    emit('update-month')
 }
 
 
@@ -118,8 +120,10 @@ function deleteTask(indexTask) {
     if (result == null)
         showNotificationOrAlert(`Erro ao deletar a tarefa do dia: ${day} de ${month} de ${year}`)
 
-    else
+    else {
         listOfTask.value = result
+        emit('update-month')
+    }
 }
 
 </script>

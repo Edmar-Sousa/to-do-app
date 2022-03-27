@@ -35,6 +35,7 @@
                         v-for="day in week" 
                         v-bind:key="day"
                         v-bind:class="{ 
+                            'mark' : checkIfMarkThisDay(day),
                             'week-day-gray' : day.applyGrayColor, 
                             'today' : today(day, state.currentMonth, state.currentYear) 
                         }"
@@ -49,7 +50,7 @@
 
 <script lang="ts" setup>
 
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onBeforeUpdate } from 'vue'
 
 import {
     getCurrentMonthNumber,
@@ -60,6 +61,7 @@ import {
     getToday
 } from '../utils/dateUtils'
 
+import { getDaysWithTask } from '../utils/localStore'
 
 let currentMonthNumber = getCurrentMonthNumber()
 let currentYearNumber  = getCurrentYear()
@@ -84,13 +86,21 @@ const state = reactive({
     week: Array<Array<DayDataType>>()
 })
 
-const emit = defineEmits(['day-add-task'])
+const props = defineProps(['update'])
+const emit  = defineEmits(['day-add-task'])
+
+let listDaysWithTaskToMark = []
 
 onMounted(() => {
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
     setStateData(calenderData)
+    getDaysListWithTask()
 })
 
+
+onBeforeUpdate(() => {
+    getDaysListWithTask()
+})
 
 function setStateData(data: CalenderDataType) {
     state.currentMonth = data.currentMonth
@@ -106,6 +116,7 @@ function changeMonth(changeValue: number) {
 
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
     setStateData(calenderData)
+    getDaysListWithTask()
 }
 
 
@@ -118,6 +129,22 @@ function today(day, month, year) {
 
 function fillNumberCalender(number) {
     return String(number).padStart(2, "0")
+}
+
+function getDaysListWithTask() {
+    const year  = String(state.currentYear)
+    const month = state.currentMonth
+
+    listDaysWithTaskToMark = getDaysWithTask(year, month)
+}
+
+
+function checkIfMarkThisDay(day) {
+    if (day.applyGrayColor)
+        return false
+
+    const strDayNumber = String(day.dayNumber)
+    return listDaysWithTaskToMark.includes(strDayNumber)
 }
 
 </script>
@@ -197,7 +224,7 @@ table.weeks-table tr.header-line th  {
 }
 
 
-span.mark {
+td.mark:not(.today) span {
     padding: 6px 7px;
     border-radius: 50%;
     background: var(--green-color);

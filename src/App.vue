@@ -3,14 +3,15 @@
         <DayInformations 
             v-if="state.showOrHiddenTaskList || isMobile" 
             v-on:show-menu="hiddenMenu"
-            v-bind:dayTask="state.date" />
-        <MonthComponent v-on:day-add-task="showMenuTask"/>
+            v-bind:dayTask="state.date"
+            v-on:update-month="update = !update" />
+        <MonthComponent v-on:day-add-task="showMenuTask" v-bind:update="update" />
     </div>
 </template>
 
 <script setup lang="ts">
 
-import { reactive, onMounted, computed } from 'vue'
+import { reactive, onMounted, computed, ref } from 'vue'
 
 import DayInformations from './components/DayInformations.vue'
 import MonthComponent  from './components/MonthComponent.vue'
@@ -28,6 +29,8 @@ const state = reactive({
         year:  0,
     }
 })
+
+const update = ref(false)
 
 onMounted(() => {
     window.addEventListener('resize', () => {

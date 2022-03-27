@@ -184,8 +184,18 @@ export function deleteTaskOfYearMonthAndDay(year: string, month: string, day: st
         yearObject = deleteFieldsYearObjectIfEmpty(yearObject, arrayOfTasks, monthObject, month, day)
         updateOrDeleteYearFromDatabase(yearObject, year)
 
-        return yearObject[month][day] ? yearObject[month][day] : []
+        return month in yearObject && day in yearObject[month] ? yearObject[month][day] : []
     }
 
     return null
+}
+
+
+export function getDaysWithTask(year: string, month: string) {
+    const yearObject = getKeyYear(year)
+    
+    if (yearObject && month in yearObject)
+        return Object.keys(yearObject[month])
+    
+    return []
 }
