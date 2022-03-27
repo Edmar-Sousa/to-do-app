@@ -39,7 +39,7 @@
                             'today' : today(day.dayNumber, state.currentMonth, state.currentYear) 
                         }"
                         v-on:click="$emit('day-add-task', { day: day.dayNumber, month: state.currentMonth, year: state.currentYear })">
-                            <span>{{ day.dayNumber }}</span>
+                            <span>{{ fillNumberCalender(day.dayNumber) }}</span>
                     </td>
                 </tr>
             </tbody>
@@ -111,6 +111,10 @@ function changeMonth(changeValue: number) {
 
 function today(day, month, year) {
     return todayDate.day == day && todayDate.month == month && todayDate.year == year
+}
+
+function fillNumberCalender(number) {
+    return String(number).padStart(2, "0")
 }
 
 </script>

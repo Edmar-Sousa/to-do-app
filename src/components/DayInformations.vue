@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="tasks-options">
-                        <i class="fas fa-trash"></i>
+                        <i class="fas fa-trash" v-on:click="deleteTask(i)"></i>
                         <i class="fas fa-check-circle" v-on:click="markTaskWithCheck(i, task.check)"></i>
                     </div>
                 </li>
@@ -46,6 +46,7 @@ import {
     addTaskIntoLocalStorage, 
     getTaskOfYearMonthAndDay,
     markTaskCheckOfYearMonthAndDay,
+    deleteTaskOfYearMonthAndDay,
 } from '../utils/localStore'
 
 const emit  = defineEmits(['show-menu'])
@@ -103,6 +104,19 @@ function markTaskWithCheck(index, checkUpdate) {
 
     if (result == null)
         showNotificationOrAlert(`Erro ao atualizar a tarefa do dia: ${day} de ${month} de ${year}`)
+
+    listOfTask.value = result
+}
+
+function deleteTask(indexTask) {
+    const day   = props.dayTask.day
+    const month = props.dayTask.month
+    const year  = props.dayTask.year
+
+    const result = deleteTaskOfYearMonthAndDay(year, month, day, indexTask)
+
+    if (result == null)
+        showNotificationOrAlert(`Erro ao deletar a tarefa do dia: ${day} de ${month} de ${year}`)
 
     listOfTask.value = result
 }

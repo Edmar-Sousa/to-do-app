@@ -147,3 +147,22 @@ export function markTaskCheckOfYearMonthAndDay(year: string, month: string, day:
 
     return null
 }
+
+
+export function deleteTaskOfYearMonthAndDay(year: string, month: string, day: string, index: number) {
+    const yearObject = getKeyYear(year)
+
+    if (yearObject) {
+        const monthObject = yearObject[month]
+        let arrayOfTasks  = monthObject[day]
+
+        arrayOfTasks.splice(index, 1)
+        monthObject[day]  = arrayOfTasks
+        yearObject[month] = monthObject
+
+        window.localStorage.setItem(year, JSON.stringify(yearObject))
+        return arrayOfTasks
+    }
+
+    return null
+}
