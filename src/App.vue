@@ -59,7 +59,6 @@ function hiddenMenu() {
     state.showOrHiddenTaskList = false
 }
 
-
 </script>
 
 

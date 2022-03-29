@@ -3,15 +3,15 @@
         <input type="text" 
             v-bind:id="`input-${nameInput}`" placeholder="-" 
             v-on:input="$emit('update:modelValue', $event.target.value)"
+            v-bind:value="inputValue"
         />
-
         <label v-bind:for="`input-${nameInput}`">{{ nameInput }}</label>
     </div>
 </template>
 
 <script setup lang="ts">
 
-const props = defineProps(['nameInput', 'modelValue'])
+const props = defineProps(['nameInput', 'modelValue', 'inputValue'])
 const emit  = defineEmits(['update:modelValue'])
 
 </script>

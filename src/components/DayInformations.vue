@@ -6,8 +6,8 @@
             <h2>Tarefas do dia: {{ date }}</h2>
 
             <div class="add-task-container">
-                <InputComponent nameInput="hora"   v-model="hourInputValue" />
-                <InputComponent nameInput="Tarefa" v-model="taskInputValue" />
+                <InputComponent nameInput="hora"   v-model="hourInputValue" v-bind:inputValue="hourInputValue"/>
+                <InputComponent nameInput="Tarefa" v-model="taskInputValue" v-bind:inputValue="taskInputValue"/>
 
                 <button class="add-task-btn" v-on:click="addTaskInDatabase">
                     <i class="fas fa-plus"></i>
@@ -93,6 +93,8 @@ function addTaskInDatabase() {
     getTasks()
 
     emit('update-month')
+    hourInputValue.value = ''
+    taskInputValue.value = ''
 }
 
 

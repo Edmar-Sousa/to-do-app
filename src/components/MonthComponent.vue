@@ -1,22 +1,18 @@
 <template>
     <div class="month-container">
         <div class="calender-header">
-            <button 
-                class="change-date-button"
-                v-on:click="changeMonth(-1)">
-                    &#60;
-            </button>
+            <ButtonComponent v-on:change-month="changeMonth(-1)">
+                &#60;
+            </ButtonComponent>
             
             <h1 class="title-month">{{ state.currentMonth }} {{ state.currentYear }}</h1>
 
-            <button 
-                class="change-date-button" 
-                v-on:click="changeMonth(1)">
-                    &#62;
-            </button>
+            <ButtonComponent v-on:change-month="changeMonth(1)">
+                &#62;
+            </ButtonComponent>
         </div>
 
-        <table class="weeks-table" cellspacing=0>
+        <table class="weeks-table" cellspacing="0">
             <thead>
                 <tr class="header-line">
                     <th>DOM</th>
@@ -31,17 +27,14 @@
 
             <tbody>
                 <tr v-for="(week, i) in state.week" v-bind:key="i">
-                    <td 
+                    <DayCalender 
                         v-for="day in week" 
-                        v-bind:key="day"
-                        v-bind:class="{ 
-                            'mark' : checkIfMarkThisDay(day),
-                            'week-day-gray' : day.applyGrayColor, 
-                            'today' : today(day, state.currentMonth, state.currentYear) 
-                        }"
-                        v-on:click="$emit('day-add-task', { day: day.dayNumber, month: state.currentMonth, year: state.currentYear })">
-                            <span>{{ fillNumberCalender(day.dayNumber) }}</span>
-                    </td>
+                        v-bind:key="day.dayNumber" 
+                        v-bind:dataDay="day"
+                        v-bind:month="state.currentMonth"
+                        v-bind:year="state.currentYear"
+                        v-bind:dayToMark="listDaysWithTaskToMark"
+                        v-on:day-select="emitEventSelectDay" />
                 </tr>
             </tbody>
         </table>
@@ -52,21 +45,21 @@
 
 import { ref, reactive, onMounted, onBeforeUpdate } from 'vue'
 
+import ButtonComponent from './Button.vue'
+import DayCalender from './DayCalender.vue'
+
 import {
     getCurrentMonthNumber,
     getNameMonth,
     getCurrentYear,
     getCurrentCalender,
     getIndexNextMonth,
-    getToday
 } from '../utils/dateUtils'
 
 import { getDaysWithTask } from '../utils/localStore'
 
 let currentMonthNumber = getCurrentMonthNumber()
 let currentYearNumber  = getCurrentYear()
-
-const todayDate = getToday()
 
 interface DayDataType {
     dayNumber: number
@@ -89,7 +82,7 @@ const state = reactive({
 const props = defineProps(['update'])
 const emit  = defineEmits(['day-add-task'])
 
-let listDaysWithTaskToMark = []
+let listDaysWithTaskToMark = ref([])
 
 onMounted(() => {
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
@@ -101,6 +94,10 @@ onMounted(() => {
 onBeforeUpdate(() => {
     getDaysListWithTask()
 })
+
+function emitEventSelectDay(data) {
+    emit('day-add-task', data)
+}
 
 function setStateData(data: CalenderDataType) {
     state.currentMonth = data.currentMonth
@@ -120,31 +117,11 @@ function changeMonth(changeValue: number) {
 }
 
 
-function today(day, month, year) {
-    if (!day.applyGrayColor)
-        return todayDate.day == day.dayNumber && todayDate.month == month && todayDate.year == year
-
-    return false
-}
-
-function fillNumberCalender(number) {
-    return String(number).padStart(2, "0")
-}
-
 function getDaysListWithTask() {
     const year  = String(state.currentYear)
     const month = state.currentMonth
 
-    listDaysWithTaskToMark = getDaysWithTask(year, month)
-}
-
-
-function checkIfMarkThisDay(day) {
-    if (day.applyGrayColor)
-        return false
-
-    const strDayNumber = String(day.dayNumber)
-    return listDaysWithTaskToMark.includes(strDayNumber)
+    listDaysWithTaskToMark.value = getDaysWithTask(year, month)
 }
 
 </script>
@@ -178,41 +155,12 @@ h1.title-month {
     color: var(--primary-color);
 }
 
-button.change-date-button {
-    font-size: 3rem;
-    font-weight: 700;
-    color: var(--primary-color);
-
-    width: 40px;
-    height: 40px;
-
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-
-    background: none;
-}
-
-button.change-date-button:hover {
-    background: rgb(233, 233, 233);
-}
-
 table.weeks-table {
     width: 100%;
     margin: 30px 0;
     font-size: 1.6rem;
 }
 
-table.weeks-table td {
-    height: 4rem;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-}
-
-td.week-day-gray {
-    color: var(--gray-color);
-}
 
 table.weeks-table tr.header-line {
     height: 40px;
@@ -223,17 +171,5 @@ table.weeks-table tr.header-line th  {
     border-bottom: 1px solid var(--gray-color);
 }
 
-
-td.mark:not(.today) span {
-    padding: 6px 7px;
-    border-radius: 50%;
-    background: var(--green-color);
-}
-
-td.today span {
-    padding: 7px;
-    border-radius: 50%;
-    border: 1px solid var(--green-color);
-}
 
 </style>
