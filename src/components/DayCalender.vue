@@ -1,51 +1,44 @@
 <template>
     <td 
         v-bind:class="{ 
-            'mark' : checkIfMarkThisDay(),
+            'mark' : checkIfMarkThisDay,
             'week-day-gray' : applyGrayColor,
-            'today': checkToday()
+            'today': checkToday
         }"
-        v-on:click="$emit('day-select', dataToEmit)">
+        v-on:click="$emit('daySelect', dayNumber)">
             <span>{{ padStart(dayNumber) }}</span>
     </td>
 </template>
 
 <script setup lang="ts">
 
+import { computed, onBeforeUpdate } from 'vue'
 import { getToday } from '../utils/dateUtils'
 
 
 const props = defineProps(['dataDay', 'month', 'year', 'dayToMark'])
-const emit  = defineEmits(['day-select'])
+const emit  = defineEmits(['daySelect'])
 
 const { dayNumber, applyGrayColor } = props.dataDay
 const { month, year } = props
 
-const dataToEmit = { 
-    day   : dayNumber, 
-    month, 
-    year
-}
-
 const todayDate = getToday()
-let listDaysWithTaskToMark = props.dayToMark
 
-
-function checkIfMarkThisDay() {
+const checkIfMarkThisDay = computed(() => {
     if (applyGrayColor)
         return false
 
     const strDayNumber = String(dayNumber)
-    return listDaysWithTaskToMark.includes(strDayNumber)
-}
+    return props.dayToMark.includes(strDayNumber)
+})
 
 
-function checkToday() {
-    if (!applyGrayColor)
-        return todayDate.day == dayNumber && todayDate.month == month && todayDate.year == year
+const checkToday = computed(() => {
+    if (applyGrayColor)
+        return false
 
-    return false
-}
+    return todayDate.day == dayNumber && todayDate.month == props.month && todayDate.year == props.year
+})
 
 function padStart(number) {
     return String(number).padStart(2, "0")

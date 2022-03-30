@@ -14,7 +14,7 @@
                 </button>
             </div>
 
-            <ul v-if="listOfTask.length > 0">
+            <ul v-show="listOfTask.length > 0">
                 <li v-for="(task, i) in listOfTask" v-bind:key="i">
                     <div>
                         <span class="hour">{{ task.hour }}</span>
@@ -28,7 +28,7 @@
                 </li>
             </ul>
 
-            <p v-else class="not-task-message">
+            <p v-show="listOfTask.length <= 0" class="not-task-message">
                 <i class="fas fa-exclamation-circle"></i>
                 Não tem tarefas para hoje, aproveite seu tempo livre!
             </p>

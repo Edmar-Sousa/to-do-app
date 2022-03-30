@@ -34,7 +34,7 @@
                         v-bind:month="state.currentMonth"
                         v-bind:year="state.currentYear"
                         v-bind:dayToMark="listDaysWithTaskToMark"
-                        v-on:day-select="emitEventSelectDay" />
+                        v-on:daySelect="emitEventSelectDay" />
                 </tr>
             </tbody>
         </table>
@@ -95,8 +95,14 @@ onBeforeUpdate(() => {
     getDaysListWithTask()
 })
 
-function emitEventSelectDay(data) {
-    emit('day-add-task', data)
+function emitEventSelectDay(dayNumber) {
+    const dataToEmit = {
+        day  : dayNumber,
+        month: state.currentMonth,
+        year : state.currentYear
+    }
+
+    emit('day-add-task', dataToEmit)
 }
 
 function setStateData(data: CalenderDataType) {
