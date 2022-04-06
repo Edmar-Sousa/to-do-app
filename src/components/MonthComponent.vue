@@ -74,7 +74,7 @@ interface CalenderDataType {
 
 
 const state = reactive({
-    currentMonth: String,
+    currentMonth: '',
     currentYear: 0,
     week: Array<Array<DayDataType>>()
 })
@@ -82,7 +82,7 @@ const state = reactive({
 const props = defineProps(['update'])
 const emit  = defineEmits(['day-add-task'])
 
-let listDaysWithTaskToMark = ref([])
+let listDaysWithTaskToMark = ref(Array<string>())
 
 onMounted(() => {
     const calenderData = getCurrentCalender(currentYearNumber, currentMonthNumber)
@@ -95,7 +95,7 @@ onBeforeUpdate(() => {
     getDaysListWithTask()
 })
 
-function emitEventSelectDay(dayNumber) {
+function emitEventSelectDay(dayNumber: Number) {
     const dataToEmit = {
         day  : dayNumber,
         month: state.currentMonth,

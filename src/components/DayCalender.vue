@@ -12,15 +12,14 @@
 
 <script setup lang="ts">
 
-import { computed, onBeforeUpdate } from 'vue'
-import { getToday } from '../utils/dateUtils'
+import { computed } from 'vue'
+import { getNameMonth, getToday } from '../utils/dateUtils'
 
 
 const props = defineProps(['dataDay', 'month', 'year', 'dayToMark'])
 const emit  = defineEmits(['daySelect'])
 
 const { dayNumber, applyGrayColor } = props.dataDay
-const { month, year } = props
 
 const todayDate = getToday()
 
@@ -37,10 +36,11 @@ const checkToday = computed(() => {
     if (applyGrayColor)
         return false
 
-    return todayDate.day == dayNumber && todayDate.month == props.month && todayDate.year == props.year
+    const currentMonth = getNameMonth(todayDate.month)
+    return todayDate.day == dayNumber && currentMonth == props.month && todayDate.year == props.year
 })
 
-function padStart(number) {
+function padStart(number: string) {
     return String(number).padStart(2, "0")
 }
 

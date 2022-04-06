@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 
 import InputComponent from './InputComponent.vue'
 import { showNotificationOrAlert } from '../utils/Notification'
@@ -48,23 +48,31 @@ import {
     markTaskCheckOfYearMonthAndDay,
     deleteTaskOfYearMonthAndDay,
 } from '../utils/localStore'
+import { getNameMonth } from '../utils/dateUtils';
 
 const emit  = defineEmits(['show-menu', 'update-month'])
 const props = defineProps(['dayTask'])
 
 const date = computed(() => { 
+    const monthName = getNameMonth(props.dayTask.month)
     getTasks()
-    return `${props.dayTask.day} de ${props.dayTask.month} de ${props.dayTask.year}`
+    return `${props.dayTask.day} de ${monthName} de ${props.dayTask.year}`
 })
+
+interface TaskType {
+    hour: string
+    check: boolean
+    task: string
+}
 
 const hourInputValue = ref('')
 const taskInputValue = ref('')
-const listOfTask = ref([])
+const listOfTask = ref(Array<TaskType>())
 
 
 function getTasks() {
     const year  = props.dayTask.year
-    const month = props.dayTask.month
+    const month = getNameMonth(props.dayTask.month)
     const day   = props.dayTask.day
 
     listOfTask.value = getTaskOfYearMonthAndDay(year, month, day)
@@ -98,7 +106,7 @@ function addTaskInDatabase() {
 }
 
 
-function markTaskWithCheck(index, checkUpdate) {
+function markTaskWithCheck(index: number, checkUpdate: boolean) {
     const day   = props.dayTask.day
     const month = props.dayTask.month
     const year  = props.dayTask.year
@@ -112,7 +120,7 @@ function markTaskWithCheck(index, checkUpdate) {
     listOfTask.value = result
 }
 
-function deleteTask(indexTask) {
+function deleteTask(indexTask: number) {
     const day   = props.dayTask.day
     const month = props.dayTask.month
     const year  = props.dayTask.year

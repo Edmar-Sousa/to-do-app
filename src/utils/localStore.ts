@@ -16,8 +16,9 @@ function newTaskObject(hour: string, task: string) : TaskType {
 
 
 function createObject(keyObject: string, valueObject: any) {
-    const dayObject = {}
-    dayObject[keyObject] = valueObject
+    const dayObject = {
+        [keyObject] : valueObject
+    }
 
     return dayObject
 }
@@ -40,7 +41,11 @@ function addTask(task: TaskType, data: DataType, year: string) {
     let { day, month, dayData, monthData, oldMonth } = data
 
     dayData.push(task)
-    monthData[day] = dayData
+    monthData = {
+        ...monthData,
+        [day]: dayData
+    }
+
     const monthObject = createObject(month, monthData)
 
     addObjectInLocalStorage(year, { 
@@ -60,7 +65,7 @@ function getKeyYear(year: string) {
         return JSON.parse(yearString)
 }
 
-function getMonthIfExists(yearObject: Object, month: string) {
+function getMonthIfExists(yearObject: any, month: string) {
     const monthExists = checkExistKeyInObject(yearObject, month)
     let monthToReturn = {}
 
@@ -70,7 +75,7 @@ function getMonthIfExists(yearObject: Object, month: string) {
     return monthToReturn
 }
 
-function getDayIfExists(monthObject: Object, day: string) {
+function getDayIfExists(monthObject: any, day: string) {
     const dayExists = checkExistKeyInObject(monthObject, day)
     let dayToReturn = []
 

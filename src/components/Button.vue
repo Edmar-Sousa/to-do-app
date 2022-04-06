@@ -1,6 +1,6 @@
 <template>
     <button class="change-date-button" v-on:click="$emit('change-month')">
-        <slot />
+        <slot></slot>
     </button>
 </template>
 

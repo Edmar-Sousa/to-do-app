@@ -51,7 +51,10 @@ export function getCurrentYear() {
 }
 
 export function getNameMonth(monthNumber: number) {
-    return months[monthNumber]
+    if (typeof(monthNumber) === 'number')
+        return months[monthNumber]
+
+    return monthNumber
 }
 
 export function getIndexNextMonth(monthNumber : number, year: number, valueToAdd: number) {
@@ -149,14 +152,18 @@ export function getWeeksOfMonth(year : number, month: number) {
 
 export function getToday() {
     const stringToday = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full' }).format(new Date())
-    // sexta-feira, 25 de março de 2022
+    // sexta-feira, 25 de marco de 2022
     const splitDate = stringToday.split(' ')
 
     const day   = splitDate[1]               // 1 -> index of day
     const month = splitDate[3].toUpperCase() // 3 -> index of month
     const year  = splitDate[5]               // 5 -> index of year
 
-    return { day, month, year }
+    return { 
+        day  : Number(day), 
+        month: getNumberMonthWithName(month), 
+        year : Number(year)
+    }
 }
 
 export function getCurrentCalender(year : number, month: number) {

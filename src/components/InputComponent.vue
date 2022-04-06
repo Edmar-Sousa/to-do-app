@@ -2,7 +2,7 @@
     <div class="input-container">
         <input type="text" 
             v-bind:id="`input-${nameInput}`" placeholder="-" 
-            v-on:input="$emit('update:modelValue', $event.target.value)"
+            v-on:input="changeValue"
             v-bind:value="inputValue"
         />
         <label v-bind:for="`input-${nameInput}`">{{ nameInput }}</label>
@@ -13,6 +13,12 @@
 
 const props = defineProps(['nameInput', 'modelValue', 'inputValue'])
 const emit  = defineEmits(['update:modelValue'])
+
+function changeValue(event: Event) {
+    const inputElement = event.target as HTMLInputElement
+    emit('update:modelValue', inputElement.value)
+}
+
 
 </script>
 

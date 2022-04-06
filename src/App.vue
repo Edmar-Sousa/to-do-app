@@ -16,8 +16,16 @@ import { reactive, onMounted, computed, ref } from 'vue'
 import DayInformations from './components/DayInformations.vue'
 import MonthComponent  from './components/MonthComponent.vue'
 
+import { 
+    getToday,
+    getNameMonth
+} from './utils/dateUtils'
 
-import { getToday } from './utils/dateUtils'
+interface DataEvent {
+    day  : number
+    month: number
+    year : number
+}
 
 const state = reactive({
     showOrHiddenTaskList: true,
@@ -46,7 +54,7 @@ onMounted(() => {
 
 const isMobile = computed(() => state.windowWidth < 768 ? false : true)
 
-function showMenuTask(taskDate) {
+function showMenuTask(taskDate: DataEvent) {
     if (isMobile)
         state.showOrHiddenTaskList = true
 
