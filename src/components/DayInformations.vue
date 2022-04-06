@@ -94,7 +94,7 @@ function addTaskInDatabase() {
     const task = taskInputValue.value
     const hour = hourInputValue.value
     const day  = String(props.dayTask.day)
-    const month= props.dayTask.month
+    const month= getNameMonth(props.dayTask.month)
     const year = String(props.dayTask.year)
 
     addTaskIntoLocalStorage(task, hour, day, month, year)
