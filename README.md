@@ -31,7 +31,7 @@
 ```
 
 ## Deploy
-[heroku deploy app](https://to-do-app-deploy.herokuapp.com/)
+[link para o app](https://to-do-app-deploy.herokuapp.com/)
 
 ## Author
 - Edmar Sousa. <br><br>
