@@ -5,14 +5,7 @@
         <div class="task-of-day-container">
             <h2>Tarefas do dia: {{ date }}</h2>
 
-            <div class="add-task-container">
-                <InputComponent nameInput="hora"   v-model="hourInputValue" v-bind:inputValue="hourInputValue"/>
-                <InputComponent nameInput="Tarefa" v-model="taskInputValue" v-bind:inputValue="taskInputValue"/>
-
-                <button class="add-task-btn" v-on:click="addTaskInDatabase">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
+            <addTaskComponent v-on:add-new-task="addTaskInDatabase" />
 
             <ul v-show="listOfTask.length > 0">
                 <li v-for="(task, i) in listOfTask" v-bind:key="i">
@@ -40,8 +33,9 @@
 
 import { computed, ref } from 'vue'
 
-import InputComponent from './InputComponent.vue'
 import { showNotificationOrAlert } from '../utils/Notification'
+import addTaskComponent from './addTaskComponent.vue'
+
 import { 
     addTaskIntoLocalStorage, 
     getTaskOfYearMonthAndDay,
@@ -65,10 +59,12 @@ interface TaskType {
     task: string
 }
 
-const hourInputValue = ref('')
-const taskInputValue = ref('')
-const listOfTask = ref(Array<TaskType>())
+interface TaskEventType { 
+    hourInputValue: string
+    taskInputValue: string
+}
 
+const listOfTask = ref(Array<TaskType>())
 
 function getTasks() {
     const year  = props.dayTask.year
@@ -79,20 +75,11 @@ function getTasks() {
 }
 
 
-function addTaskInDatabase() {
-    if (hourInputValue.value == '' || taskInputValue.value == '') {
-        showNotificationOrAlert('Preencha todos os campos!')
-        return
-    }
+function addTaskInDatabase(newTask: TaskEventType) {
+    const { hourInputValue, taskInputValue } = newTask
 
-    const hourIsValid = /^([0-1][0-9]|2[0-5]):[0-5][0-9]$/.test(hourInputValue.value)
-    if (!hourIsValid) {
-        showNotificationOrAlert('O horario da tarefa não corresponde ao formato de 24h')
-        return
-    }
-    
-    const task = taskInputValue.value
-    const hour = hourInputValue.value
+    const task = taskInputValue
+    const hour = hourInputValue
     const day  = String(props.dayTask.day)
     const month= getNameMonth(props.dayTask.month)
     const year = String(props.dayTask.year)
@@ -101,14 +88,12 @@ function addTaskInDatabase() {
     getTasks()
 
     emit('update-month')
-    hourInputValue.value = ''
-    taskInputValue.value = ''
 }
 
 
 function markTaskWithCheck(index: number, checkUpdate: boolean) {
     const day   = props.dayTask.day
-    const month = props.dayTask.month
+    const month = getNameMonth(props.dayTask.month)
     const year  = props.dayTask.year
     const check = !checkUpdate
 
@@ -122,7 +107,7 @@ function markTaskWithCheck(index: number, checkUpdate: boolean) {
 
 function deleteTask(indexTask: number) {
     const day   = props.dayTask.day
-    const month = props.dayTask.month
+    const month = getNameMonth(props.dayTask.month)
     const year  = props.dayTask.year
 
     const result = deleteTaskOfYearMonthAndDay(year, month, day, indexTask)
@@ -164,18 +149,6 @@ div.task-of-day-container {
     justify-content: left;
 }
 
-div.add-task-container {
-    display: flex;
-}
-
-div.add-task-container div:first-child {
-    width: 70px;
-}
-
-div.add-task-container div:nth-child(2) {
-    flex: 1;
-}
-
 p.not-task-message {
     margin-top: 20px;
     font-size: 1.6rem;
@@ -188,24 +161,6 @@ p.not-task-message i {
 div.tasks-options i {
     font-size: 2rem;
     margin-right: 15px;
-}
-
-button.add-task-btn {
-    width: 30px;
-    height: 30px;
-
-    font-weight: bold;
-    font-size: 1.5rem;
-
-    cursor: pointer;
-
-    border-radius: 15px;
-    border: none;
-    background: none;
-}
-
-button.add-task-btn:hover {
-    background: var(--white-color);
 }
 
 span.hour {
@@ -232,11 +187,6 @@ button.close-button {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-img {
-    width: 130px;
-    margin: 20px 0;
 }
 
 h2 {
