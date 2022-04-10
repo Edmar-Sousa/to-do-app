@@ -5,19 +5,14 @@
         <div class="task-of-day-container">
             <h2>Tarefas do dia: {{ date }}</h2>
 
-            <addTaskComponent v-on:add-new-task="addTaskInDatabase" />
+            <AddTaskComponent v-on:add-new-task="addTaskInDatabase" />
 
             <ul v-show="listOfTask.length > 0">
                 <li v-for="(task, i) in listOfTask" v-bind:key="i">
-                    <div>
-                        <span class="hour">{{ task.hour }}</span>
-                        <span v-bind:class="{ 'checked': task.check }">{{ task.task }}</span>
-                    </div>
-
-                    <div class="tasks-options">
-                        <i class="fas fa-trash" v-on:click="deleteTask(i)"></i>
-                        <i class="fas fa-check-circle" v-on:click="markTaskWithCheck(i, task.check)"></i>
-                    </div>
+                    <TaskComponent 
+                        v-bind:task="task" 
+                        v-on:delete-task="deleteTask(i)"
+                        v-on:mark-task-with-check="markTaskWithCheck(i, task.check)"/>
                 </li>
             </ul>
 
@@ -34,7 +29,8 @@
 import { computed, ref } from 'vue'
 
 import { showNotificationOrAlert } from '../utils/Notification'
-import addTaskComponent from './addTaskComponent.vue'
+import AddTaskComponent from './AddTaskComponent.vue'
+import TaskComponent    from './TaskComponent.vue'
 
 import { 
     addTaskIntoLocalStorage, 
@@ -158,19 +154,6 @@ p.not-task-message i {
     font-size: 1.8rem;
 }
 
-div.tasks-options i {
-    font-size: 2rem;
-    margin-right: 15px;
-}
-
-span.hour {
-    color: var(--primary-color);
-    background: var(--white-color);
-    padding: 3px 5px;
-    margin-right: 10px;
-    border-radius: 50px;
-}
-
 button.close-button {
     position: absolute;
     top: 10px;
@@ -204,28 +187,6 @@ li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-span.checked {
-    text-decoration: line-through;
-}
-
-li div.tasks-options {
-    display: none;
-}
-
-i.fa-trash:hover {
-    transition: 400ms;
-    color: rgb(184, 8, 8);
-}
-
-i.fa-check-circle:hover {
-    transition: 400ms;
-    color: rgb(13, 100, 4);
-}
-
-li:hover div.tasks-options {
-    display: block;
 }
 
 ul {
