@@ -1,13 +1,13 @@
 <template>
     <div class="month-container">
         <div class="calender-header">
-            <ButtonComponent v-on:change-month="changeMonth(-1)">
+            <ButtonComponent v-on:on-click-event="changeMonth(-1)">
                 &#60;
             </ButtonComponent>
             
             <h1 class="title-month">{{ state.currentMonth }} {{ state.currentYear }}</h1>
 
-            <ButtonComponent v-on:change-month="changeMonth(1)">
+            <ButtonComponent v-on:on-click-event="changeMonth(1)">
                 &#62;
             </ButtonComponent>
         </div>

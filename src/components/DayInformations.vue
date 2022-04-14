@@ -28,7 +28,7 @@
 
 import { computed, ref } from 'vue'
 
-import { showNotificationOrAlert } from '../utils/Notification'
+import { showNotification } from '../utils/Notification'
 import AddTaskComponent from './AddTaskComponent.vue'
 import TaskComponent    from './TaskComponent.vue'
 
@@ -96,7 +96,7 @@ function markTaskWithCheck(index: number, checkUpdate: boolean) {
     const result = markTaskCheckOfYearMonthAndDay(year, month, day, index, check)
 
     if (result == null)
-        showNotificationOrAlert(`Erro ao atualizar a tarefa do dia: ${day} de ${month} de ${year}`)
+        showNotification(`Erro ao atualizar a tarefa do dia: ${day} de ${month} de ${year}`)
 
     listOfTask.value = result
 }
@@ -109,7 +109,7 @@ function deleteTask(indexTask: number) {
     const result = deleteTaskOfYearMonthAndDay(year, month, day, indexTask)
 
     if (result == null)
-        showNotificationOrAlert(`Erro ao deletar a tarefa do dia: ${day} de ${month} de ${year}`)
+        showNotification(`Erro ao deletar a tarefa do dia: ${day} de ${month} de ${year}`)
 
     else {
         listOfTask.value = result

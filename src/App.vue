@@ -1,5 +1,7 @@
 <template>
     <div class="app">
+        <NotificationModal />
+
         <DayInformations 
             v-if="state.showOrHiddenTaskList || isMobile" 
             v-on:show-menu="hiddenMenu"
@@ -13,8 +15,9 @@
 
 import { reactive, onMounted, computed, ref } from 'vue'
 
-import DayInformations from './components/DayInformations.vue'
-import MonthComponent  from './components/MonthComponent.vue'
+import DayInformations   from './components/DayInformations.vue'
+import MonthComponent    from './components/MonthComponent.vue'
+import NotificationModal from './components/NotificationModal.vue'
 
 import { 
     getToday,
@@ -87,6 +90,7 @@ html {
     --white-color: white;
     --green-color: rgb(19, 172, 5);
     --gray-color: rgb(161, 161, 161);
+    --modal-background: rgba(8, 9, 19, 0.726);
 }
 
 body {

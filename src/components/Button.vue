@@ -1,12 +1,12 @@
 <template>
-    <button class="change-date-button" v-on:click="$emit('change-month')">
+    <button class="change-date-button" v-on:click="$emit('on-click-event')">
         <slot></slot>
     </button>
 </template>
 
 <script setup lang="ts">
 
-const emit = defineEmits(['change-month'])
+const emit = defineEmits(['on-click-event'])
 
 </script>
 

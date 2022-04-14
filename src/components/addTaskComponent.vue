@@ -14,7 +14,7 @@
 import { ref } from 'vue'
 import InputComponent from './InputComponent.vue'
 
-import { showNotificationOrAlert } from '../utils/Notification'
+import { showNotification } from '../utils/Notification'
 
 const hourInputValue = ref('')
 const taskInputValue = ref('')
@@ -24,13 +24,13 @@ const emit = defineEmits(['add-new-task'])
 
 function addTaskInDatabase() {
     if (hourInputValue.value == '' || taskInputValue.value == '') {
-        showNotificationOrAlert('Preencha todos os campos!')
+        showNotification('Preencha todos os campos!')
         return
     }
 
     const hourIsValid = /^([0-1][0-9]|2[0-5]):[0-5][0-9]$/.test(hourInputValue.value)
     if (!hourIsValid) {
-        showNotificationOrAlert('O horario da tarefa não corresponde ao formato de 24h')
+        showNotification('O horario da tarefa não corresponde ao formato de 24h: "00:00".')
         return
     }
 

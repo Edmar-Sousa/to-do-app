@@ -1,14 +1,15 @@
-export function showNotificationOrAlert(message: string) {
-    if (!('Notification' in window))
-        alert("Este browser não suporta notificações de Desktop");
+import { ref } from 'vue'
 
-    if (Notification.permission === 'denied') {
-        Notification.requestPermission(permission => {
-            if (permission !== 'granted')
-                alert('O sistema precisa enviar notificações')
-        })
-    }
 
-    else
-        new Notification(message)
+export const showModal    = ref(false)
+export const messageModal = ref('')
+
+export function showNotification(message: string) {
+    showModal.value    = true
+    messageModal.value = message
+}
+
+export function closeModal() {
+    showModal.value    = false
+    messageModal.value = ''
 }
