@@ -28,14 +28,15 @@ function addTaskInDatabase() {
         return
     }
 
-    const hourIsValid = /^([0-1][0-9]|2[0-5]):[0-5][0-9]$/.test(hourInputValue.value)
+    const fomartedHour = hourInputValue.value.padStart(5, '0')
+    const hourIsValid  = /^([0-1][0-9]|2[0-4]):[0-5][0-9]$/.test(fomartedHour)
     if (!hourIsValid) {
         showNotification('O horario da tarefa não corresponde ao formato de 24h: "00:00".')
         return
     }
 
     emit('add-new-task', { 
-        hourInputValue: hourInputValue.value,
+        hourInputValue: fomartedHour,
         taskInputValue: taskInputValue.value
     })
 
